@@ -9,7 +9,7 @@ Projeto Integrador Final de Inteligência Artificial — Afya | UNIMA Maceió (P
 | Nome completo | Responsabilidade |
 |---|---|
 | Luiz Gustavo Fontes de Carvalho | Machine Learning e Visão Computacional (`src/machine_learning/`, `src/visao_computacional/`) |
-| Matheus Cordeiro | PLN e base de perguntas (`src/pln/`, `dados/pln/`) |
+| Matheus Cordeiro da Trindade | PLN e base de perguntas (`src/pln/`, `dados/pln/`) |
 | Sanelva Antonio | Decisão, integração, interface, testes e documentação (`src/decisao/`, `src/pipeline.py`, `app.py`, `testes/`, `artigo/`) |
 
 ## Problema
