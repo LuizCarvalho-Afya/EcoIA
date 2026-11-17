@@ -120,7 +120,9 @@ Rode `streamlit run app.py`, envie uma foto, escolha ou digite uma pergunta e cl
 
 1. **Foto de garrafa PET + "Onde devo jogar isso?"**: Plástico, lixeira vermelha, com orientações de preparo.
 2. **Mesma foto + "Posso jogar esse papel na lixeira azul?"**: o agente detecta o conflito (pergunta cita papel, imagem indica plástico com 75%), segue a imagem e responde "Não. Plástico vai na lixeira vermelha, e não na azul" com aviso.
-3. **Foto escura, borrada ou ambígua**: com confiança baixa, o agente pede outra foto em vez de arriscar uma resposta.
+3. **Foto escura e desfocada (falha conhecida)**: o agente só pede outra foto quando a confiança fica abaixo de 0,50. Numa foto escura e desfocada de teste, o classificador deu Papel com 82% e o agente respondeu sem aviso. A confiança não detecta má qualidade de imagem (veja Limitações e o Caso 4 do artigo).
+
+**Vídeo da demonstração:** https://youtu.be/HO2TSEtH4kE (vídeo de 1min45 mostrando o app em funcionamento).
 
 As capturas de tela dessas execuções ficam em `resultados/exemplos/`. Os gráficos e métricas gerados pelo treino ficam em `resultados/graficos/` e `resultados/`; versione essas pastas no GitHub (os modelos `.joblib` e o dataset não são versionados).
 
