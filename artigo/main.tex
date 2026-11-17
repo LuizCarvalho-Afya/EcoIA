@@ -1,0 +1,207 @@
+% EcoIA - Artigo IEEE Conference (máx. 6 páginas, incluindo referências)
+%
+% ATENÇÃO: trechos marcados com [PREENCHER] dependem de resultados que só existem depois de
+% treinar o modelo de visão com o TrashNet (ver README). NÃO invente valores: copie os números de
+% resultados/metricas_visao.json e resultados/comparacao_modelos.csv. Os resultados de PLN abaixo
+% vêm de resultados/metricas_pln.json (execução real, backend "stem-simples").
+% Confira todas as referências antes de entregar.
+\documentclass[conference]{IEEEtran}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{url}
+
+% Figura opcional: mostra um aviso se o arquivo ainda não existir.
+\newcommand{\figopt}[4]{%
+  \begin{figure}[t]\centering
+  \IfFileExists{figuras/#1}{\includegraphics[width=#2]{figuras/#1}}{%
+  \IfFileExists{artigo/figuras/#1}{\includegraphics[width=#2]{artigo/figuras/#1}}{%
+  \IfFileExists{../resultados/graficos/#1}{\includegraphics[width=#2]{../resultados/graficos/#1}}{%
+  \fbox{\parbox{0.8\columnwidth}{\centering\small [figura pendente: \detokenize{#1}]}}}}}
+  \caption{#3}\label{#4}\end{figure}}
+\newcommand{\pend}[1]{\textbf{[PREENCHER: #1]}}
+
+\begin{document}
+
+\title{EcoIA: Separador Inteligente de Resíduos com Visão Computacional, Processamento de Linguagem Natural e Agente de Decisão}
+
+\author{\IEEEauthorblockN{Luiz Gustavo Fontes de Carvalho, Matheus Cordeiro e Sanelva Antonio}
+\IEEEauthorblockA{Afya -- UNIMA Maceió, Disciplina de Inteligência Artificial\\
+Professor: Icaro Ferreira\\
+Repositório: \url{https://github.com/LuizCarvalho-Afya/EcoIA}}}
+
+\maketitle
+
+\begin{abstract}
+O descarte incorreto de resíduos recicláveis reduz a eficiência da coleta seletiva, e muitas pessoas têm dúvidas sobre a lixeira correta e o preparo do material. Este trabalho apresenta o EcoIA, um protótipo web que integra, em um único fluxo, Visão Computacional, Aprendizado de Máquina supervisionado, Processamento de Linguagem Natural (PLN) e um agente de decisão baseado em regras. A partir da foto de um resíduo e de uma pergunta em português, o sistema classifica o material, reconhece a intenção do usuário e combina as duas fontes, tratando divergências e incertezas. Sobre o TrashNet (2527 imagens), características clássicas de cor e forma com SVM atingiram acurácia de 0,66 e F1 macro de 0,56 no teste; ao usar uma rede pré-treinada (MobileNetV2) como extratora de características, os valores subiram para 0,89 e 0,82. A intenção das perguntas, reconhecida com TF-IDF e regressão logística, obteve F1 macro de 0,73 em 43 perguntas de teste, abaixo de um baseline de regras (0,84). Discutem-se erros, limitações dos dados e da avaliação.
+\end{abstract}
+
+\begin{IEEEkeywords}
+classificação de resíduos, visão computacional, processamento de linguagem natural, agente baseado em regras, coleta seletiva
+\end{IEEEkeywords}
+
+\section{Introdução}
+A coleta seletiva depende de que cada pessoa identifique corretamente o material do resíduo e o descarte na lixeira adequada. No Brasil, a Resolução CONAMA nº 275/2001 padroniza as cores de coleta (vermelho para plástico, azul para papel, verde para vidro e amarelo para metal) \cite{conama}. Dúvidas comuns incluem se a embalagem precisa ser lavada, se determinado item é reciclável e qual lixeira usar.
+
+O objetivo deste trabalho é projetar, implementar e avaliar uma aplicação que responda a essas dúvidas a partir de uma foto e de uma pergunta em linguagem natural. As contribuições são: (i) um fluxo integrado em que Visão Computacional e PLN alimentam um agente de decisão que reconcilia as duas fontes; (ii) um conjunto de 211 perguntas rotuladas em sete intenções; (iii) uma avaliação reprodutível, com comparação de modelos, baselines, ablação de características e teste de robustez; e (iv) a discussão das limitações.
+
+\section{Fundamentação e Trabalhos Relacionados}
+\textbf{Classificação de resíduos.} O TrashNet \cite{trashnet} reúne fotografias de objetos sobre fundo claro em seis classes (vidro, papel, papelão, plástico, metal e rejeito) e é amplamente usado como referência para classificação de resíduos.
+
+\textbf{Características de imagem.} Histogramas no espaço HSV descrevem a distribuição de cor; o descritor HOG \cite{hog} captura gradientes locais (forma e textura); a limiarização de Otsu \cite{otsu} permite separar objeto e fundo. As implementações usam OpenCV \cite{opencv}.
+
+\textbf{Transferência de aprendizado.} Redes convolucionais treinadas no ImageNet \cite{imagenet}, como a MobileNetV2 \cite{mobilenet}, produzem representações que se transferem bem para outras tarefas de imagem. Neste trabalho a rede não é reajustada: ela apenas extrai atributos, e o classificador é treinado e avaliado sobre o TrashNet.
+
+\textbf{PLN.} A representação TF-IDF \cite{tfidf} pondera termos por frequência e raridade. A normalização em português envolve remoção de acentos e de palavras vazias e radicalização (RSLP \cite{rslp}, disponível no NLTK \cite{nltk}).
+
+\textbf{Agentes.} Um agente reativo escolhe ações a partir de percepções, e um agente baseado em utilidade pondera incertezas \cite{russell}. O módulo de decisão deste trabalho é um agente de regras que usa a confiança das percepções.
+
+\section{Metodologia}
+\subsection{Arquitetura}
+O fluxo (Fig.~\ref{fig:arq}) tem cinco etapas: (1) o usuário envia a imagem; (2) a Visão Computacional segmenta o objeto e extrai características; (3) o modelo de ML classifica o material com uma confiança; (4) o PLN interpreta a pergunta (intenção e material citado); (5) o agente de decisão combina as saídas e gera a resposta. A interface foi construída com Streamlit; todo o código está em Python.
+
+\figopt{arquitetura.png}{0.95\columnwidth}{Arquitetura do EcoIA: foto e pergunta seguem por caminhos paralelos e são reconciliadas pelo agente de decisão.}{fig:arq}
+
+\subsection{Dados de imagem}
+Utiliza-se o TrashNet (versão redimensionada) \cite{trashnet}. As pastas foram mapeadas para cinco classes: \emph{papelão} foi agrupado em \emph{papel} (mesma cor de lixeira) e \emph{rejeito} tornou-se \emph{outros}. O total é de 2527 imagens (papel 997, vidro 501, plástico 482, metal 410 e outros 137); o conjunto de teste, com 380 imagens, tem 150 de papel, 76 de vidro, 73 de plástico, 61 de metal e 20 de outros. A divisão é estratificada, com semente fixa: 70\% treino, 15\% validação e 15\% teste. As imagens de teste não são usadas em nenhuma etapa de ajuste. Limitação: as fotos têm fundo uniforme e iluminação controlada.
+
+\subsection{Visão Computacional}
+O objeto é isolado por limiarização de Otsu, fechamento e abertura morfológicos e recorte do maior contorno; se a área for inferior a 5\% da imagem, usa-se a imagem inteira. O recorte é redimensionado para $128\times128$ e descrito por: histogramas HSV (16, 8 e 8 intervalos), média e desvio dos canais BGR, proporção de pixels muito claros (reflexos), densidade de bordas (Canny), variância do Laplaciano e HOG $64\times64$. Isso resulta em um vetor de 1805 atributos. O HOG é implementado diretamente com NumPy e filtros de Sobel (células de $8\times8$ pixels, 9 orientações, blocos de $2\times2$ células com normalização L2).
+
+\subsection{Características profundas (transferência de aprendizado)}
+Além das características clássicas, usa-se a MobileNetV2 pré-treinada no ImageNet (formato ONNX, executada com o módulo \texttt{cv2.dnn} do OpenCV, sem GPU). O recorte do objeto é centralizado em um quadrado com a cor do fundo, redimensionado para $224\times224$ e normalizado com a média e o desvio do ImageNet; as 1000 pontuações de saída da rede formam o vetor de características. Três conjuntos são comparados: clássico, profundo e combinado (concatenação). A rede não é reajustada.
+
+\subsection{Aprendizado de Máquina}
+Foi escolhida a abordagem supervisionada por haver rótulos disponíveis. Usando o scikit-learn \cite{sklearn}, comparam-se SVM com kernel RBF (probabilidades por calibração sigmoide), Random Forest, k-NN e regressão logística, todos precedidos de padronização. Cada modelo é treinado sobre cada um dos três conjuntos de características. A seleção usa o F1 macro na validação e validação cruzada de 5 partições no treino; o modelo escolhido é retreinado em treino+validação e avaliado uma única vez no teste. Usa-se F1 macro porque as classes são desbalanceadas. Também são feitas ablação de características (cor, forma/textura, todas) e teste de robustez (brilho, ruído gaussiano, desfoque aplicados às imagens de teste).
+
+\subsection{PLN}
+Criaram-se manualmente 211 perguntas em português, rotuladas em sete intenções: \emph{onde\_descartar}, \emph{cor\_lixeira}, \emph{confirmar\_descarte} (``posso jogar isso na lixeira azul?''), \emph{preparo}, \emph{reciclavel}, \emph{identificar\_material} e \emph{fora\_escopo}. Cada texto passa por minúsculas, remoção de acentos e de palavras vazias e radicalização (backend \emph{stem-simples} nesta execução). O classificador é TF-IDF com unigramas e bigramas seguido de regressão logística; comparam-se LinearSVC e Naive Bayes por validação cruzada, e dois baselines: classe majoritária e regras por palavras-chave. Divisão estratificada 80/20 (semente 42). Um extrator de entidades baseado em léxico identifica o material (ou objeto) e a cor de lixeira citados; material explícito prevalece sobre objeto, e objetos ambíguos (por exemplo, \emph{garrafa}) não definem material.
+
+\subsection{Agente de decisão}
+O agente recebe a classe visual, sua confiança e a margem entre as duas maiores probabilidades, além da intenção e do material citado. As regras principais são: confiança visual abaixo de 0,50 sem material no texto leva a pedir nova imagem; margem inferior a 0,15 gera resposta com aviso de ambiguidade; imagem e texto concordantes aumentam a segurança; em divergência, a imagem prevalece se a confiança for pelo menos 0,75 e o texto prevalece caso contrário, sempre com aviso ao usuário; perguntas fora do escopo recebem recusa educada. Quando a intenção é \emph{confirmar\_descarte} e o usuário cita uma cor de lixeira, a resposta começa com ``Sim'' ou ``Não'', conforme essa cor coincida ou não com a lixeira do material decidido, e indica a lixeira correta. Cada regra acionada é registrada para auditoria. Os limiares foram definidos por julgamento, sem calibração com os dados de validação, e podem ser ajustados na interface.
+
+\subsection{Ambiente e reprodutibilidade}
+Python 3.13, scikit-learn 1.9, OpenCV 5.0 e pandas 3.0; sementes fixas; sem GPU. Os comandos para reproduzir estão no repositório.
+
+\section{Resultados e Discussão}
+\subsection{PLN}
+A Tabela~\ref{tab:pln} resume o desempenho no conjunto de teste (43 perguntas, não usadas no treino). A regressão logística atingiu acurácia de 0,74 e F1 macro de 0,73; o baseline de regras obteve F1 macro de 0,84 e a classe majoritária, 0,04. Na validação cruzada (F1 macro, média $\pm$ desvio), obtiveram-se $0{,}790\pm0{,}065$ para o LinearSVC, $0{,}785\pm0{,}075$ para a regressão logística e $0{,}658\pm0{,}095$ para o Naive Bayes. A aplicação usa a regressão logística porque ela fornece probabilidades, usadas como confiança da intenção.
+
+\begin{table}[t]
+\caption{PLN: desempenho no teste (n = 43).}\label{tab:pln}\centering
+\begin{tabular}{lcc}\toprule
+Método & Acurácia & F1 macro\\\midrule
+Classe majoritária & 0,16 & 0,04\\
+Regras por palavras-chave & 0,84 & 0,84\\
+TF-IDF + Reg. Logística & 0,74 & 0,73\\\bottomrule
+\end{tabular}
+\end{table}
+
+Por intenção (F1): confirmar\_descarte 0,82, reciclavel 0,77, identificar\_material 0,77, onde\_descartar 0,73, cor\_lixeira 0,73, fora\_escopo 0,73 e preparo 0,60. Dos onze erros, três são perguntas de \emph{preparo} atribuídas a outras intenções (por exemplo, ``Posso jogar a caixa de pizza suja?'' foi lida como confirmação de descarte), e duas perguntas fora do escopo (``Qual o placar do jogo?'' e ``Qual a capital do Brasil?'') foram atribuídas a intenções de descarte. Neste teste, o modelo aprendido ficou abaixo do baseline de regras (F1 macro de 0,73 contra 0,84). As regras foram escritas pelos autores com o mesmo vocabulário dos exemplos, o que as favorece, e o teste tem apenas 43 exemplos (cada erro altera a acurácia em cerca de 2,3 pontos percentuais), sem intervalos de confiança. A inclusão da intenção \emph{confirmar\_descarte}, que permite ao agente responder ``Sim'' ou ``Não'' quando o usuário cita uma lixeira, aumentou o número de classes; na versão anterior, com seis intenções e 37 perguntas de teste, o F1 macro foi 0,79, mas os conjuntos de teste são diferentes e a comparação é apenas indicativa. A vantagem esperada do modelo aprendido (generalizar para formulações novas) exigiria um conjunto maior e independente.
+
+\subsection{Visão Computacional e Machine Learning}
+Com as características clássicas, a Tabela~\ref{tab:ml} compara os modelos na validação (15\% das imagens, que não participam do ajuste; a divisão está em \texttt{divisao\_dados.csv}). O SVM com kernel RBF foi o melhor, com acurácia de 0,66 e F1 macro de 0,56 no teste. A distância entre acurácia e F1 macro indica desempenho desigual entre as classes, analisado adiante para o modelo final (Fig.~\ref{fig:cm}).
+
+Um caso observado na demonstração ilustra a limitação: uma garrafa PET transparente em fundo branco, com recorte correto, foi classificada como papel com 59\% de confiança, possivelmente porque um objeto transparente tem pouca cor própria e se aproxima de papel branco nas características clássicas (hipótese não verificada). A Tabela~\ref{tab:conj} compara os três conjuntos de características no teste. O modelo escolhido pela validação foi o SVM sobre as características da rede pré-treinada, com acurácia de 0,889 e F1 macro de 0,823 no teste, contra 0,661 e 0,558 das características clássicas. O SVM foi o melhor modelo nos três conjuntos, e a rede pré-treinada superou as características clássicas também na validação cruzada ($0{,}796$ contra $0{,}558$ de F1 macro). A combinação dos dois conjuntos não superou a rede isoladamente (0,795 contra 0,823 no teste). Os resultados vêm de uma única divisão com cerca de 380 imagens de teste, sem intervalos de confiança, e a rede foi treinada em imagens do ImageNet, o que não permite afirmar generalização para fotos fora do padrão do TrashNet. Após a troca para a rede pré-treinada, a mesma imagem passou a ser classificada como plástico com 75\% de confiança (vidro com cerca de 24\%). Trata-se de um único exemplo, que ilustra o efeito esperado, mas não substitui a métrica no conjunto de teste.
+
+\begin{table}[t]
+\caption{Visão: comparação na validação (CV: F1 macro, média $\pm$ desvio).}\label{tab:ml}\centering\footnotesize
+\begin{tabular}{llccc}\toprule
+Caract. & Modelo & Acur. (val.) & F1 (val.) & F1 (CV 5)\\\midrule
+Clássicas & SVM (RBF) & 0,649 & 0,593 & $0{,}558\pm0{,}018$\\
+Clássicas & Random Forest & 0,625 & 0,562 & $0{,}493\pm0{,}031$\\
+Clássicas & k-NN (k=5) & 0,538 & 0,477 & $0{,}486\pm0{,}030$\\
+Clássicas & Reg. Logística & 0,591 & 0,554 & $0{,}492\pm0{,}007$\\\midrule
+Profundas & SVM (RBF) & 0,865 & 0,807 & $0{,}796\pm0{,}008$\\
+Profundas & Random Forest & 0,797 & 0,693 & $0{,}680\pm0{,}023$\\
+Profundas & k-NN (k=5) & 0,802 & 0,728 & $0{,}714\pm0{,}030$\\
+Profundas & Reg. Logística & 0,797 & 0,740 & $0{,}724\pm0{,}013$\\\midrule
+Combinadas & SVM (RBF) & 0,839 & 0,792 & $0{,}774\pm0{,}028$\\
+Combinadas & Random Forest & 0,813 & 0,730 & $0{,}670\pm0{,}029$\\
+Combinadas & k-NN (k=5) & 0,741 & 0,666 & $0{,}681\pm0{,}032$\\
+Combinadas & Reg. Logística & 0,826 & 0,770 & $0{,}755\pm0{,}013$\\\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\caption{Visão: melhor modelo de cada conjunto de características no teste.}\label{tab:conj}\centering
+\begin{tabular}{lccc}\toprule
+Características & Modelo & Acurácia & F1 macro\\\midrule
+Clássicas & SVM (RBF) & 0,661 & 0,558\\
+Rede pré-treinada & SVM (RBF) & 0,889 & 0,823\\
+Combinadas & SVM (RBF) & 0,868 & 0,795\\\bottomrule
+\end{tabular}
+\end{table}
+
+\figopt{matriz_confusao.png}{0.8\columnwidth}{Matriz de confusão do modelo de visão no teste.}{fig:cm}
+
+A Fig.~\ref{fig:cm} e a Tabela~\ref{tab:classes} detalham o modelo final no teste. O papel é quase sempre reconhecido (revocação de 0,99), e plástico, vidro e metal ficam entre 0,85 e 0,88. A classe \emph{outros} tem o pior desempenho: apenas 8 das 20 imagens foram reconhecidas (revocação de 0,40), com 8 classificadas como papel, 3 como metal e 1 como plástico. A precisão da classe é alta (0,89), ou seja, o modelo raramente atribui \emph{outros} sem motivo, mas tende a tratar rejeito como material reciclável. Entre os materiais, os erros mais frequentes são plástico previsto como vidro (6 imagens) e metal previsto como vidro (4); vidro foi previsto como plástico, papel ou metal em 3 imagens cada, padrão compatível com a semelhança visual entre embalagens transparentes e brilhantes. As métricas por classe foram calculadas a partir da matriz de confusão e reproduzem a acurácia (0,889) e o F1 macro (0,823) reportados. Com apenas 20 exemplos de teste, a estimativa para \emph{outros} é imprecisa.
+
+\begin{table}[t]
+\caption{Visão: desempenho por classe no teste (modelo final).}\label{tab:classes}\centering
+\begin{tabular}{lcccc}\toprule
+Classe & $n$ & Precisão & Revocação & F1\\\midrule
+Plástico & 73 & 0,93 & 0,85 & 0,89\\
+Papel & 150 & 0,90 & 0,99 & 0,94\\
+Vidro & 76 & 0,87 & 0,88 & 0,88\\
+Metal & 61 & 0,86 & 0,87 & 0,86\\
+Outros & 20 & 0,89 & 0,40 & 0,55\\\bottomrule
+\end{tabular}
+\end{table}
+
+A Tabela~\ref{tab:abl} reúne a ablação e o teste de robustez. Na ablação, o SVM treinado apenas com as características de cor obteve F1 macro de 0,73, mais que o conjunto clássico completo (0,56), enquanto forma e textura isoladas ficaram em 0,50. Uma explicação plausível, não testada, é que o bloco HOG (1764 dos 1805 atributos) domina o vetor depois da padronização e acrescenta ruído. Como a ablação foi avaliada no conjunto de teste, ela não foi usada para escolher o modelo; ainda assim, a comparação mais justa com a rede pré-treinada é contra o melhor subconjunto clássico (0,73 contra 0,82 de F1 macro), e a vantagem da rede se mantém, embora menor que a diferença para o conjunto completo.
+
+No teste de robustez, o modelo final foi aplicado às imagens de teste alteradas (brilho $\pm50$, ruído gaussiano com desvio 15 e desfoque gaussiano com núcleo $9\times9$). Clarear a imagem praticamente não afetou o resultado (acurácia de 0,887), e o desfoque reduziu a acurácia em 2,9 pontos percentuais. Escurecer (0,834) e adicionar ruído (0,837) foram as perturbações mais danosas, com queda de cerca de 5 pontos percentuais na acurácia; o ruído reduziu o F1 macro de 0,82 para 0,74. As perturbações são sintéticas e simples, e não substituem fotos reais com iluminação e fundos variados.
+
+\begin{table}[t]
+\caption{Ablação (características clássicas, SVM) e robustez (modelo final) no teste.}\label{tab:abl}\centering
+\begin{tabular}{lcc}\toprule
+Condição & Acurácia & F1 macro\\\midrule
+\multicolumn{3}{l}{\emph{Ablação (características clássicas)}}\\
+Somente cor & 0,774 & 0,731\\
+Somente forma e textura & 0,605 & 0,502\\
+Todas as clássicas & 0,661 & 0,558\\\midrule
+\multicolumn{3}{l}{\emph{Robustez (rede pré-treinada + SVM)}}\\
+Imagem original & 0,889 & 0,823\\
+Mais clara & 0,887 & 0,818\\
+Mais escura & 0,834 & 0,767\\
+Ruído gaussiano & 0,837 & 0,739\\
+Desfoque & 0,861 & 0,805\\\bottomrule
+\end{tabular}
+\end{table}
+
+
+\subsection{Integração}
+Foram executados no aplicativo os casos a seguir, com a mesma fotografia de uma garrafa PET transparente em fundo branco.
+\begin{enumerate}
+\item \emph{Erro com características clássicas.} Pergunta ``Onde devo jogar isso?'' (intenção \emph{onde\_descartar}, 92\%). A visão previu papel com 59\% de confiança; como não havia material na pergunta e a confiança superava o limite mínimo (0,50), a regra ``imagem confiável sem material citado'' seguiu a imagem e a resposta (lixeira azul) foi incorreta.
+\item \emph{Acerto com a rede pré-treinada.} Mesma pergunta. A visão previu plástico com 75\% de confiança; a resposta foi ``plástico, lixeira vermelha'', com orientação de preparo.
+\item \emph{Divergência entre imagem e texto.} Pergunta ``Posso jogar esse papel na lixeira azul?'', que cita papel. A visão manteve plástico (75\%); como a confiança atingiu o limite de 0,75, a regra R7 fez prevalecer a imagem e o sistema avisou o conflito (``Você citou Papel/Papelão, mas a imagem indica Plástico com 75\% de confiança''). Nessa execução a intenção foi lida como \emph{cor\_lixeira} (60\%) e a resposta indicou a lixeira vermelha. Após a inclusão da intenção \emph{confirmar\_descarte}, a pergunta passou a ser reconhecida com 93\% de confiança e a resposta começa com ``Não. Plástico vai na lixeira vermelha, e não na azul''.
+\end{enumerate}
+\textbf{Caso 4 --- foto escura e desfocada (falha observada).} Uma fotografia de celular, escura, desfocada e com fundo estampado, com a pergunta ``Onde devo jogar isso?'', foi classificada como papel com 82\% de confiança (PLN: \emph{onde\_descartar}, 91\%). Como a confiança superou o limiar mínimo de 0,50 e a margem entre as duas primeiras classes foi ampla, nenhuma regra de cautela (R4 ou R5) foi acionada e o sistema respondeu ``lixeira azul'' sem aviso. O comportamento esperado era pedir outra foto. O caso mostra que a confiança do classificador não reflete a qualidade da imagem: o modelo foi treinado com fotos nítidas, bem iluminadas e de fundo liso, e produz probabilidades altas mesmo fora dessa distribuição. Tratamos isso como limitação (Seção~\ref{sec:limitacoes}) e como trabalho futuro: um teste prévio de qualidade (brilho médio e variância do Laplaciano) antes da classificação.
+
+\subsection{Limitações}\label{sec:limitacoes}
+(i) O TrashNet tem fundo uniforme; fotos reais com fundo complexo, vários objetos ou objetos sujos podem degradar o desempenho. (ii) A segmentação por Otsu falha em fundos não uniformes; nesse caso usa-se a imagem inteira. (iii) A classe \emph{outros} agrupa itens heterogêneos (orgânico, pilhas, isopor) e tem poucos exemplos (20 no teste); sua revocação foi de apenas 0,40, de modo que o sistema pode orientar como reciclável um item que é rejeito. (iv) O conjunto de PLN é pequeno e escrito pelos autores. (v) As orientações de descarte são gerais e variam por município. (vi) Não foi avaliado o agente com usuários reais. (vii) Os resultados vêm de uma única divisão dos dados, sem intervalos de confiança. (viii) A robustez foi avaliada apenas com perturbações sintéticas simples. (ix) A confiança do classificador não detecta fotos escuras ou desfocadas (Caso 4): o agente chegou a responder com 82\% de confiança sobre uma imagem de má qualidade.
+
+\section{Conclusão e Trabalhos Futuros}
+Foi implementado um protótipo integrado em que a decisão final combina a classificação visual, a intenção e o material citado na pergunta, com regras explícitas para incerteza e conflito. Na visão, a transferência de aprendizado elevou o F1 macro no teste de 0,56 (características clássicas) para 0,82. No PLN, o classificador aprendido igualou o baseline de regras em um teste pequeno. Como trabalhos futuros: ampliar e diversificar o conjunto de perguntas com participantes externos; ajustar finamente (\emph{fine-tuning}) uma rede pré-treinada; coletar fotos com fundos reais; calibrar os limiares do agente; e avaliar com usuários.
+
+\begin{thebibliography}{10}
+\bibitem{trashnet} G. Thung and M. Yang, ``TrashNet: dataset of images of trash,'' GitHub repository, 2017. [Online]. Available: https://github.com/garythung/trashnet
+\bibitem{conama} Conselho Nacional do Meio Ambiente (CONAMA), ``Resolução nº 275, de 25 de abril de 2001,'' 2001.
+\bibitem{opencv} G. Bradski, ``The OpenCV Library,'' \emph{Dr. Dobb's Journal of Software Tools}, 2000.
+\bibitem{hog} N. Dalal and B. Triggs, ``Histograms of oriented gradients for human detection,'' in \emph{Proc. IEEE CVPR}, 2005, pp. 886--893.
+\bibitem{otsu} N. Otsu, ``A threshold selection method from gray-level histograms,'' \emph{IEEE Trans. Syst., Man, Cybern.}, vol. 9, no. 1, pp. 62--66, 1979.
+\bibitem{tfidf} G. Salton and C. Buckley, ``Term-weighting approaches in automatic text retrieval,'' \emph{Inf. Process. Manage.}, vol. 24, no. 5, pp. 513--523, 1988.
+\bibitem{rslp} V. M. Orengo and C. Huyck, ``A stemming algorithm for the Portuguese language,'' in \emph{Proc. SPIRE}, 2001, pp. 186--193.
+\bibitem{nltk} S. Bird, E. Klein, and E. Loper, \emph{Natural Language Processing with Python}. O'Reilly, 2009.
+\bibitem{sklearn} F. Pedregosa \emph{et al.}, ``Scikit-learn: Machine learning in Python,'' \emph{J. Mach. Learn. Res.}, vol. 12, pp. 2825--2830, 2011.
+\bibitem{russell} S. Russell and P. Norvig, \emph{Artificial Intelligence: A Modern Approach}, 4th ed. Pearson, 2020.
+\bibitem{imagenet} J. Deng \emph{et al.}, ``ImageNet: A large-scale hierarchical image database,'' in \emph{Proc. IEEE CVPR}, 2009, pp. 248--255.
+\bibitem{mobilenet} M. Sandler \emph{et al.}, ``MobileNetV2: Inverted residuals and linear bottlenecks,'' in \emph{Proc. IEEE CVPR}, 2018, pp. 4510--4520.
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+# O dataset TrashNet não é redistribuído aqui; baixe com src.machine_learning.baixar_dataset
+dados/trashnet/
+# Modelos treinados são gerados pelo treino
+modelos/*.joblib
+# Artefatos de compilação LaTeX
+artigo/*.aux
+artigo/*.log
+artigo/*.out
+artigo/*.bbl
+artigo/*.blg
+modelos/*.onnx

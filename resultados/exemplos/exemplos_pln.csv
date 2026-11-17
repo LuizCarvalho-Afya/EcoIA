@@ -1,0 +1,12 @@
+pergunta,intencao,confianca,material,objeto,lixeira_citada,candidatos
+Onde eu jogo uma garrafa de vidro?,onde_descartar,0.90,vidro,garrafa,,
+Que cor de lixeira é para papelão?,cor_lixeira,0.94,papel,,,
+Preciso lavar a lata antes?,preparo,0.91,metal,lata,,
+Esse copo de plástico recicla?,reciclavel,0.66,plastico,copo,,
+O que é isso na foto?,identificar_material,0.83,,,,
+Qual a previsão do tempo amanhã?,fora_escopo,0.53,,,,
+Como descarto jornais velhos?,onde_descartar,0.53,papel,jornal,,
+Posso jogar esse papel na lixeira azul?,confirmar_descarte,0.93,papel,,azul,
+Isso é plástico ou metal?,identificar_material,0.74,,,,plastico|metal
+Onde descarto bateria de celular?,onde_descartar,0.89,outros,,,
+Pode jogar plástico na lixeira vermelha?,confirmar_descarte,0.95,plastico,,vermelha,

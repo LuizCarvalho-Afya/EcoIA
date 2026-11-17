@@ -1,0 +1,212 @@
+texto,intencao
+Onde devo jogar uma garrafa de refrigerante?,onde_descartar
+Onde eu descarto uma lata de atum?,onde_descartar
+Como descartar esse lixo corretamente?,onde_descartar
+Onde jogo esse papel?,onde_descartar
+Pra onde vai uma garrafa de vidro?,onde_descartar
+Onde posso descartar caixas de papelão?,onde_descartar
+Qual o lugar certo para jogar embalagem plástica?,onde_descartar
+Como faço para descartar vidro quebrado?,onde_descartar
+Onde coloco o jornal velho?,onde_descartar
+Pode me dizer onde jogar uma latinha de cerveja?,onde_descartar
+Onde é o descarte certo desse objeto?,onde_descartar
+Para onde devo levar esse resíduo?,onde_descartar
+Como devo me desfazer de uma sacola plástica?,onde_descartar
+Onde descarto potes de vidro de conserva?,onde_descartar
+O que faço com essa lata vazia?,onde_descartar
+Aonde eu jogo revistas antigas?,onde_descartar
+Qual o destino correto dessa garrafa pet?,onde_descartar
+Onde descarto uma pilha usada?,onde_descartar
+Como faço o descarte de copos descartáveis?,onde_descartar
+Onde eu jogo embalagem de leite?,onde_descartar
+Qual o descarte adequado para papel de caderno?,onde_descartar
+"Preciso descartar uma lata de refrigerante, onde jogo?",onde_descartar
+Onde vai esse pote de margarina?,onde_descartar
+Como descartar frascos de perfume de vidro?,onde_descartar
+Me diz onde jogar a tampa de metal da garrafa,onde_descartar
+Onde posso largar esse papel amassado?,onde_descartar
+Onde jogo canudos plásticos?,onde_descartar
+Como é o descarte certo de uma caixa de sapato?,onde_descartar
+Onde eu coloco garrafas de vinho vazias?,onde_descartar
+Onde descartar bandeja de isopor?,onde_descartar
+Como me livro de cascas de banana?,onde_descartar
+Qual a cor da lixeira para plástico?,cor_lixeira
+Que cor é a lixeira do vidro?,cor_lixeira
+Qual lixeira eu uso para papel?,cor_lixeira
+Em qual lixeira vai a lata?,cor_lixeira
+De que cor é o coletor de metal?,cor_lixeira
+Lixeira azul serve para quê?,cor_lixeira
+Qual é a cor certa da lixeira dessa garrafa?,cor_lixeira
+Preciso saber a cor da lixeira para papelão,cor_lixeira
+Qual cor de lixeira recebe vidro?,cor_lixeira
+A lixeira amarela é de qual material?,cor_lixeira
+O que vai na lixeira verde?,cor_lixeira
+O que se joga na lixeira vermelha?,cor_lixeira
+Qual o padrão de cores da coleta seletiva?,cor_lixeira
+Que cor de lixeira devo usar para esse resíduo?,cor_lixeira
+Em qual cor de lixeira jogo uma garrafa pet?,cor_lixeira
+Qual lixeira é indicada para jornal?,cor_lixeira
+Cor do coletor para latinhas?,cor_lixeira
+Qual a lixeira certa para embalagem plástica?,cor_lixeira
+Me fala a cor da lixeira de vidro,cor_lixeira
+Lixeira vermelha é para plástico mesmo?,confirmar_descarte
+Qual cor eu uso para revistas?,cor_lixeira
+Qual a cor da lixeira cinza?,cor_lixeira
+"Vermelho, azul, verde e amarelo: o que cada cor significa?",cor_lixeira
+Qual a cor correta da lixeira para papel de embalagem?,cor_lixeira
+Que lixeira uso para pote de conserva de vidro?,cor_lixeira
+Qual cor de lixeira vai a lata de refrigerante?,cor_lixeira
+Existe cor específica de lixeira para metal?,cor_lixeira
+Em que lixeira coloco copos plásticos?,cor_lixeira
+Qual o código de cores das lixeiras no Brasil?,cor_lixeira
+A lixeira azul recebe plástico?,confirmar_descarte
+Preciso lavar a garrafa antes de descartar?,preparo
+Devo tirar a tampa antes de jogar fora?,preparo
+Posso amassar a lata antes de descartar?,preparo
+Tenho que enxaguar o pote de vidro?,preparo
+Como preparar embalagem plástica para reciclagem?,preparo
+Precisa limpar a lata antes?,preparo
+Papel sujo de gordura pode ir junto?,preparo
+Devo retirar o rótulo da garrafa?,preparo
+A garrafa precisa estar vazia?,preparo
+Preciso esvaziar o frasco antes de jogar?,preparo
+Tem que lavar as embalagens de plástico?,preparo
+Como devo preparar o papelão para a coleta?,preparo
+Posso jogar a caixa de pizza suja?,preparo
+Preciso desmontar a caixa de papelão?,preparo
+A lata tem que ser lavada?,preparo
+"Antes de descartar vidro, o que devo fazer?",preparo
+É necessário tirar a tampa de metal do pote?,preparo
+Devo secar o papel antes de descartar?,preparo
+Pode jogar a garrafa com resto de refrigerante?,preparo
+Como limpar a embalagem antes de reciclar?,preparo
+Posso mandar a embalagem suja para a coleta?,preparo
+Preciso retirar a etiqueta do vidro?,preparo
+Como separo a tampa da garrafa?,preparo
+Tenho que amassar a garrafa pet?,preparo
+Qual o preparo certo para latas de alumínio?,preparo
+Preciso deixar o papel seco antes de descartar?,preparo
+Vale a pena enxaguar a embalagem?,preparo
+Preciso tirar os restos de comida da embalagem?,preparo
+Devo quebrar o vidro antes de descartar?,preparo
+Como preparar a sacola plástica para a coleta seletiva?,preparo
+Garrafa plástica é reciclável?,reciclavel
+Vidro pode ser reciclado?,reciclavel
+Esse material pode ser reciclado?,reciclavel
+Papel higiênico usado pode ser reciclado?,reciclavel
+Lata de alumínio é reciclável?,reciclavel
+Isso recicla?,reciclavel
+Dá para reciclar caixa de papelão?,reciclavel
+Espelho pode ir para reciclagem de vidro?,reciclavel
+Sacola plástica é reciclável?,reciclavel
+Posso reciclar copo descartável?,reciclavel
+O metal é totalmente reciclável?,reciclavel
+Será que esse papel é reciclável?,reciclavel
+Isopor pode ser reciclado?,reciclavel
+Papel de bala pode ser reciclado?,reciclavel
+Lâmpada é reciclável como vidro?,reciclavel
+Esse plástico é aceito na reciclagem?,reciclavel
+Pode reciclar latinha de cerveja?,reciclavel
+Jornal velho pode ser reciclado?,reciclavel
+Vidro quebrado é reciclável?,reciclavel
+Canudo plástico recicla?,reciclavel
+Esse objeto tem reciclagem?,reciclavel
+A coleta seletiva aceita embalagem de leite?,reciclavel
+Pote de margarina é reciclável?,reciclavel
+Papel carbono recicla?,reciclavel
+Posso mandar esse metal para reciclagem?,reciclavel
+Fralda descartável é reciclável?,reciclavel
+Garrafa pet recicla?,reciclavel
+Pilha pode ser reciclada junto com os outros?,reciclavel
+Papel plastificado pode ser reciclado?,reciclavel
+O vidro de janela é aceito na reciclagem?,reciclavel
+Que material é esse?,identificar_material
+O que é esse objeto?,identificar_material
+Qual é o material dessa embalagem?,identificar_material
+Me diga o que foi identificado na imagem,identificar_material
+O que você está vendo na foto?,identificar_material
+Isso é plástico ou vidro?,identificar_material
+Qual o tipo de resíduo da foto?,identificar_material
+Identifique esse resíduo,identificar_material
+Que tipo de lixo é esse?,identificar_material
+De que material é feito esse item?,identificar_material
+Qual a categoria desse resíduo?,identificar_material
+Pode me dizer o que é isso?,identificar_material
+Essa imagem mostra qual material?,identificar_material
+Como você classificou esse objeto?,identificar_material
+Qual o nome do objeto da imagem?,identificar_material
+Isso é metal?,identificar_material
+Será que é papel?,identificar_material
+Reconheça o material da foto,identificar_material
+Qual categoria o sistema encontrou?,identificar_material
+O que o modelo identificou?,identificar_material
+O objeto é de vidro?,identificar_material
+Classifique esse resíduo para mim,identificar_material
+Confirma se isso é plástico,identificar_material
+Qual material você detectou?,identificar_material
+Descobriu o que é esse lixo?,identificar_material
+Qual a classe desse resíduo?,identificar_material
+Identifica pra mim o que está na foto,identificar_material
+Esse item é de alumínio?,identificar_material
+Me explica o que é essa coisa na imagem,identificar_material
+Que resíduo é esse da imagem?,identificar_material
+"Olá, tudo bem?",fora_escopo
+Bom dia,fora_escopo
+Qual a capital do Brasil?,fora_escopo
+Quem descobriu o Brasil?,fora_escopo
+Me conte uma piada,fora_escopo
+Que horas são?,fora_escopo
+Como está o tempo hoje?,fora_escopo
+Qual o placar do jogo?,fora_escopo
+Me ajude com minha lição de matemática,fora_escopo
+Como fazer bolo de chocolate?,fora_escopo
+Quanto custa um celular novo?,fora_escopo
+Quem é você?,fora_escopo
+Obrigado!,fora_escopo
+Tchau,fora_escopo
+Qual a melhor receita de pizza?,fora_escopo
+Como instalar o Python?,fora_escopo
+Escreva um poema sobre o mar,fora_escopo
+Qual a distância da Terra até a Lua?,fora_escopo
+Quem ganhou a copa do mundo?,fora_escopo
+Como emagrecer rápido?,fora_escopo
+Pode me indicar um filme?,fora_escopo
+Qual o sentido da vida?,fora_escopo
+Como configuro meu roteador?,fora_escopo
+Preciso de dicas de viagem,fora_escopo
+Quanto é dois mais dois?,fora_escopo
+Tem algum remédio para dor de cabeça?,fora_escopo
+Como faço para tirar carteira de motorista?,fora_escopo
+Qual o melhor time do campeonato?,fora_escopo
+Me fale sobre a história de Roma,fora_escopo
+"Boa noite, tudo certo por aí?",fora_escopo
+Posso jogar esse papel na lixeira azul?,confirmar_descarte
+Posso colocar plástico na lixeira verde?,confirmar_descarte
+É certo jogar vidro na lixeira amarela?,confirmar_descarte
+Pode jogar lata na lixeira vermelha?,confirmar_descarte
+Está correto descartar papelão na lixeira azul?,confirmar_descarte
+Posso jogar essa garrafa na lixeira vermelha?,confirmar_descarte
+Esse item pode ir na lixeira verde?,confirmar_descarte
+Pode colocar esse metal na lixeira amarela?,confirmar_descarte
+Será que posso jogar isso na lixeira azul?,confirmar_descarte
+Dá para jogar vidro na lixeira vermelha?,confirmar_descarte
+Estou jogando certo se colocar a lata na lixeira amarela?,confirmar_descarte
+Posso descartar jornal na lixeira cinza?,confirmar_descarte
+Pode jogar o pote de vidro na lixeira verde?,confirmar_descarte
+É certo colocar garrafa pet na lixeira azul?,confirmar_descarte
+Devo jogar esse plástico na lixeira vermelha?,confirmar_descarte
+Posso jogar essa caixa na lixeira azul?,confirmar_descarte
+A lata vai na lixeira vermelha mesmo?,confirmar_descarte
+Esse papel pode ir na lixeira verde?,confirmar_descarte
+Posso mandar essa embalagem para a lixeira amarela?,confirmar_descarte
+Está certo jogar a garrafa de vidro na lixeira verde?,confirmar_descarte
+Pode colocar a sacola plástica na lixeira azul?,confirmar_descarte
+Confirma se posso jogar isso na lixeira vermelha,confirmar_descarte
+É correto descartar metal na lixeira verde?,confirmar_descarte
+Posso jogar revista na lixeira azul?,confirmar_descarte
+Esse objeto pode ser jogado na lixeira amarela?,confirmar_descarte
+Pode jogar copo plástico na lixeira vermelha?,confirmar_descarte
+Estou errado em colocar vidro na lixeira azul?,confirmar_descarte
+Posso usar a lixeira cinza para esse papel?,confirmar_descarte
+Jogar essa lata na lixeira azul está certo?,confirmar_descarte
+Será que o plástico vai na lixeira verde?,confirmar_descarte

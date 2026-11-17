@@ -1,0 +1,12 @@
+texto,real,previsto
+Pode jogar a garrafa com resto de refrigerante?,preparo,confirmar_descarte
+Posso jogar a caixa de pizza suja?,preparo,confirmar_descarte
+Será que esse papel é reciclável?,reciclavel,identificar_material
+Papel sujo de gordura pode ir junto?,preparo,reciclavel
+Qual o placar do jogo?,fora_escopo,onde_descartar
+Qual o lugar certo para jogar embalagem plástica?,onde_descartar,preparo
+Como me livro de cascas de banana?,onde_descartar,fora_escopo
+Qual a capital do Brasil?,fora_escopo,cor_lixeira
+O que se joga na lixeira vermelha?,cor_lixeira,confirmar_descarte
+A lixeira amarela é de qual material?,cor_lixeira,identificar_material
+Isso é metal?,identificar_material,reciclavel

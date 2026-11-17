@@ -1,0 +1,119 @@
+{
+  "conjunto_caracteristicas": "profundo",
+  "modelo": "SVM (RBF)",
+  "n_imagens": 2527,
+  "n_teste": 380,
+  "distribuicao_classes": {
+    "plastico": 482,
+    "papel": 997,
+    "vidro": 501,
+    "metal": 410,
+    "outros": 137
+  },
+  "por_conjunto_teste": {
+    "classico": {
+      "modelo": "SVM (RBF)",
+      "f1_macro_val": 0.5930619527745489,
+      "acuracia": 0.6605263157894737,
+      "f1_macro": 0.5578687283939082
+    },
+    "profundo": {
+      "modelo": "SVM (RBF)",
+      "f1_macro_val": 0.8067904247626234,
+      "acuracia": 0.8894736842105263,
+      "f1_macro": 0.8229453149356182
+    },
+    "combinado": {
+      "modelo": "SVM (RBF)",
+      "f1_macro_val": 0.7915182853891949,
+      "acuracia": 0.868421052631579,
+      "f1_macro": 0.794984181675392
+    }
+  },
+  "relatorio_por_classe": {
+    "plastico": {
+      "precision": 0.9253731343283582,
+      "recall": 0.8493150684931506,
+      "f1-score": 0.8857142857142857,
+      "support": 73.0
+    },
+    "papel": {
+      "precision": 0.896969696969697,
+      "recall": 0.9866666666666667,
+      "f1-score": 0.9396825396825397,
+      "support": 150.0
+    },
+    "vidro": {
+      "precision": 0.8701298701298701,
+      "recall": 0.881578947368421,
+      "f1-score": 0.8758169934640523,
+      "support": 76.0
+    },
+    "metal": {
+      "precision": 0.8548387096774194,
+      "recall": 0.8688524590163934,
+      "f1-score": 0.8617886178861789,
+      "support": 61.0
+    },
+    "outros": {
+      "precision": 0.8888888888888888,
+      "recall": 0.4,
+      "f1-score": 0.5517241379310345,
+      "support": 20.0
+    },
+    "accuracy": 0.8894736842105263,
+    "macro avg": {
+      "precision": 0.8872400599988467,
+      "recall": 0.7972826283089263,
+      "f1-score": 0.8229453149356182,
+      "support": 380.0
+    },
+    "weighted avg": {
+      "precision": 0.8898697435510398,
+      "recall": 0.8894736842105263,
+      "f1-score": 0.8836189572696563,
+      "support": 380.0
+    }
+  },
+  "versao_sklearn": "1.9.1",
+  "semente": 42,
+  "acuracia_teste": 0.8894736842105263,
+  "f1_macro_teste": 0.8229453149356182,
+  "ablacao_caracteristicas_classicas": {
+    "modelo": "SVM (RBF)",
+    "cor": {
+      "acuracia": 0.7736842105263158,
+      "f1_macro": 0.7308318539973216
+    },
+    "forma_textura": {
+      "acuracia": 0.6052631578947368,
+      "f1_macro": 0.5016602858065979
+    },
+    "todas": {
+      "acuracia": 0.6605263157894737,
+      "f1_macro": 0.5578687283939082
+    }
+  },
+  "robustez": {
+    "original": {
+      "acuracia": 0.8894736842105263,
+      "f1_macro": 0.8229453149356182
+    },
+    "mais_claro": {
+      "acuracia": 0.8868421052631579,
+      "f1_macro": 0.817752495895079
+    },
+    "mais_escuro": {
+      "acuracia": 0.8342105263157895,
+      "f1_macro": 0.767135680676134
+    },
+    "ruido_gaussiano": {
+      "acuracia": 0.8368421052631579,
+      "f1_macro": 0.738729366184516
+    },
+    "desfoque": {
+      "acuracia": 0.8605263157894737,
+      "f1_macro": 0.8048588641100742
+    }
+  }
+}
